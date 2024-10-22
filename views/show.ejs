@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <title>SweetAlert Table Example</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* สไตล์สำหรับตาราง */
+        .swal2-html {
+            padding: 20px;
+        }
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .custom-table th, .custom-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .custom-table th {
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <button id="showTableBtn">Show Table</button>
+
+    <script>
+        $(document).ready(function() {
+            $('#showTableBtn').click(async function() {
+                // ข้อมูลที่จะแสดงในตาราง
+                const data = [
+                    { name: "John Doe", email: "john@example.com", phone: "123-456-7890" },
+                    { name: "Jane Smith", email: "jane@example.com", phone: "098-765-4321" },
+                    { name: "Bob Johnson", email: "bob@example.com", phone: "555-555-5555" },
+                ];
+
+                // สร้าง HTML ตาราง
+                let tableHTML = `
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                data.forEach(item => {
+                    tableHTML += `
+                        <tr>
+                            <td>${item.name}</td>
+                            <td>${item.email}</td>
+                            <td>${item.phone}</td>
+                        </tr>
+                    `;
+                });
+
+                tableHTML += `
+                        </tbody>
+                    </table>
+                `;
+
+                // เรียก SweetAlert พร้อมแสดงตาราง
+                await Swal.fire({
+                    title: 'User Information',
+                    html: tableHTML,
+                    confirmButtonText: 'Close'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

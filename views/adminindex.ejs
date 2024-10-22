@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Application with DataTables</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/index.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* เพิ่ม CSS สำหรับ Modal */
+        #editModal {
+            display: none; 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0, 0, 0, 0.5); 
+           
+            justify-content: center; 
+            align-items: center; 
+        }
+
+        #editForm {
+            background: white; 
+            padding: 20px; 
+            border-radius: 8px;
+        }
+        
+            
+  
+   
+     
+    </style>
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+   
+</head>
+<body>
+    
+    <button  class="container-sm">
+
+    
+      
+        <button type="button" id="showAlertBtn"class="btn btn-info w-40">เพิ่ม</button>
+        <button onclick="document.location = '/adminmysite'" class="btn btn-primary">กลับหน้าหลัก</button> 
+
+        <!-- ตารางแสดงข้อมูล -->
+        <table id="usersTable" class="display table table-striped" >
+            <thead style="background-color: #007bff; color: #fff;">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody >
+                <% users.forEach(function(user) { %>
+                    <tr>
+                        <td><%= user.id %></td>
+                        <td><%= user.name %></td>
+                        <td><%= user.email %></td>
+                        <td><%= user.phone %></td>
+                        <td><%= user.address %></td>
+                        <td>
+                            <button class="btn btn-warning edit-btn" data-id="<%= user.id %>" data-name="<%= user.name %>" data-email="<%= user.email %>" data-phone="<%= user.phone %>" data-address="<%= user.address %>">Edit</button>
+                            <form action="/delete" method="POST" style="display:inline;">
+                                <input type="hidden" name="id" value="<%= user.id %>">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+
+        <!-- Modal สำหรับแก้ไขข้อมูล -->
+        <div id="editModal">
+            <div id="editForm" class="modal-content">
+                <form action="/update" method="POST">
+                    <input type="hidden" id="edit-id" name="id">
+                    <div class="mb-3">
+                        <input type="text" id="edit-name" name="name" class="form-control" placeholder="Name" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="email" id="edit-email" name="email" class="form-control" placeholder="Email" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" id="edit-phone" name="phone" class="form-control" placeholder="Phone" required>
+                    </div>
+                    <div class="mb-3">
+                        <input type="text" id="edit-address" name="address" class="form-control" placeholder="Address" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update User</button>
+                    <button type="submit" id="closeModal" class="btn btn-secondary">Close</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="/js/script.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Initialize DataTables
+            $('#usersTable').DataTable();
+
+            // เปิด Modal สำหรับแก้ไขข้อมูล
+            $(document).on('click', '.edit-btn', function() {
+                const id = $(this).data('id');
+                const name = $(this).data('name');
+                const email = $(this).data('email');
+                const phone = $(this).data('phone');
+                const address = $(this).data('address');
+
+                $('#edit-id').val(id);
+                $('#edit-name').val(name);
+                $('#edit-email').val(email);
+                $('#edit-phone').val(phone);
+                $('#edit-address').val(address);
+
+                // แสดง Modal
+                $('#editModal').show();
+            });
+
+            // ปิด Modal
+            $(document).on('click', '#closeModal', function() {
+                $('#editModal').hide();
+            });
+        });
+
+
+        const btn_hide = document.getElementById('btn_hide');
+const formdata = document.getElementById('formdata');
+
+$(document).ready(function() {
+    // เมื่อคลิกปุ่ม btn_hide ให้ทำการแสดงฟอร์ม formdata
+    $('#btn_hide').click(function() {
+        $('#formdata').show(); // แสดงฟอร์ม formdata
+        $('#btn_hide').hide(); // แสดงฟอร์ม formdata
+    });
+    $('#btn_show').click(()=>{
+        $('#btn_hide').hide();
+    })
+});
+
+
+
+
+Swal.fire({
+  title: "สวัสดีครับ Admin: satawat",
+  width: 400,
+  padding: "3em",
+  color: "#716add",
+  background: "#fff url(data:image/jpeg;base64,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)",
+  backdrop: `
+    rgba(0,0,123,0.4)
+    url("https://sweetalert2.github.io/images/nyan-cat.gif")
+    left top
+    no-repeat
+  `
+});
+
+
+$(document).ready(function() {
+    $('#showAlertBtn').click(async function() {
+        // เรียกใช้ SweetAlert พร้อมฟอร์ม 3 input
+        const { value: formValues } = await Swal.fire({
+            title: 'Enter your information',
+            html: `
+                <input type="text" id="swal-input1" class="swal2-input" placeholder="Enter name">
+                <input type="email" id="swal-input2" class="swal2-input" placeholder="Enter email">
+                <input type="text" id="swal-input3" class="swal2-input" placeholder="Enter phone">
+                <input type="text" id="swal-input4" class="swal2-input" placeholder="Enter address">
+            `,
+            focusConfirm: false,
+            preConfirm: () => {
+                return [
+                    document.getElementById('swal-input1').value,
+                    document.getElementById('swal-input2').value,
+                    document.getElementById('swal-input3').value,
+                    document.getElementById('swal-input4').value
+                ];
+            }
+        });
+
+        // ตรวจสอบว่ามีการกรอกข้อมูลแล้วหรือไม่
+        if (formValues) {
+            // ส่งข้อมูลไปยัง Node.js server ผ่าน AJAX
+            $.ajax({
+                url: '/add',  // API URL ที่คุณต้องการส่งข้อมูลไป
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    name: formValues[0],
+                    email: formValues[1],
+                    phone: formValues[2],
+                    address: formValues[3]
+                }),
+                success: function(response) {
+                    
+                    // แสดงผลลัพธ์จาก server
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Successfully',
+                        text: 'Data has been saved!'
+                    }).then(()=>{
+                        window.location.href = '/adminindex';
+                    })
+                    ;
+                },
+                error: function(error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error,โปรแกรมเออเร่อหรือคนError',
+                        text: 'Failed to save data.'
+                    });
+                }
+            });
+        }
+    });
+});
+
+
+
+
+ // ฟังก์ชันที่จะแสดง SweetAlert เมื่อคลิกปุ่ม
+        document.getElementById('myButton').addEventListener('click', function () {
+            Swal.fire({
+                title: 'Action Completed!',
+                text: 'Your operation was successful.',
+                icon: 'success',
+                confirmButtonText: 'Great!',
+                confirmButtonColor: '#3085d6',
+                backdrop: `rgba(0, 0, 0, 0.4)`,
+                customClass: {
+                    title: 'swal-title',
+                    popup: 'swal-popup',
+                    confirmButton: 'swal-button'
+                },
+                willClose: () => {
+                    // ทำการเรียกทำงานเพิ่มเติมที่นี่ถ้าจำเป็น
+                }
+            });
+        });
+    </script>
+    
+   
+</body>
+</html>

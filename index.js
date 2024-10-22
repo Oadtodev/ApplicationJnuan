@@ -47,10 +47,10 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 // สร้างการเชื่อมต่อ MySQL
 const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'crud_app'
+    host: 'sql12.freesqldatabase.com',
+    user: 'sql12739189',
+    password: 'ZT1JQLRDZx',
+    database: 'sql12739189'
 });
 
 connection.connect((err) => {
